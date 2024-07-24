@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import OpenAI from 'openai';
+import ChatHistory from './ChatHistory';
 import '../App.css';
 
 const secretKey = process.env.REACT_APP_OPEN_AI_API_KEY;
@@ -12,8 +12,6 @@ const openai = new OpenAI({
 const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
-  const [transcribedText, setTranscribedText] = useState('');
-  const [chatResponseText, setChatResponseText] = useState('');
   const audioChunks = useRef([]);
   const mediaRecorder = useRef(null);
   const audioContext = useRef(null);
@@ -94,16 +92,17 @@ const AudioRecorder = () => {
     formData.append('response_format', 'text');
 
     try {
-      const transcriptionResponse = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
+      const transcriptionResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${secretKey}`,
         },
+        body: formData,
       });
 
-      const transcribedText = transcriptionResponse.data;
-      setTranscribedText(transcribedText);
+      const transcribedText = await transcriptionResponse.text();
       console.log(`>> You said: ${transcribedText}`);
-      console.log("TRANSCRIPTION:", transcriptionResponse.data);
+      console.log("TRANSCRIPTION:", transcribedText);
 
       const messages = [
         {
@@ -121,7 +120,6 @@ const AudioRecorder = () => {
 
       const chatResponseText = chatResponse.choices[0].message.content;
       setChatHistory([...chatHistory, { role: 'user', content: transcribedText }, { role: 'assistant', content: chatResponseText }]);
-      setChatResponseText(chatResponseText);
       console.log(`>> Assistant said: ${chatResponseText}`);
       await playAudio(chatResponseText);
     } catch (error) {
@@ -143,13 +141,22 @@ const AudioRecorder = () => {
     };
 
     try {
-      const response = await axios.post(url, data, {
-        headers: headers,
-        responseType: "arraybuffer",
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        body: JSON.stringify(data),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const audioBuffer = await audioContext.decodeAudioData(response.data);
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
       const source = audioContext.createBufferSource();
       source.buffer = audioBuffer;
@@ -168,8 +175,7 @@ const AudioRecorder = () => {
           {isRecording ? 'Stop Recording' : 'Start Recording'}
         </button>
         <p>{isRecording ? 'Recording... Speak now!' : 'Press the button to start recording'}</p>
-        {transcribedText && <p><strong>You said:</strong> {transcribedText}</p>}
-        {chatResponseText && <p><strong>Assistant said:</strong> {chatResponseText}</p>}
+        <ChatHistory chatHistory={chatHistory} />
       </header>
     </div>
   );

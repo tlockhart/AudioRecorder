@@ -79,3 +79,51 @@ strong {
     transform: rotate(360deg);
   }
 }
+/***************************/
+.chat-history {
+  max-height: 300px; /* Adjust based on your requirement */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.chat-message {
+  display: flex;
+  justify-content: flex-start;
+  margin: 10px 0;
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.chat-bubble {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #e0e0e0;
+  position: relative;
+}
+
+.chat-message.user .chat-bubble {
+  background-color: #0084ff;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+
+.chat-message.assistant .chat-bubble {
+  background-color: #e5e5ea;
+  color: black;
+  border-bottom-left-radius: 0;
+}
+
+.chat-bubble strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+
+/*************************/
