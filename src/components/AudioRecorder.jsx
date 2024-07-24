@@ -9,14 +9,23 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
+/**
+ * AudioRecorder component.
+ * 
+ * This component handles audio recording, transcription using OpenAI Whisper,
+ * and conversation handling with OpenAI GPT-4. It also displays the chat history
+ * in a separate component.
+ */
 const AudioRecorder = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
-  const audioChunks = useRef([]);
-  const mediaRecorder = useRef(null);
-  const audioContext = useRef(null);
-  const silenceTimeout = useRef(null);
+  const [isRecording, setIsRecording] = useState(false); // Recording state
+  const [chatHistory, setChatHistory] = useState([]); // Chat history
+  const [silenceDuration, setSilenceDuration] = useState(5000); // Silence duration in milliseconds
+  const audioChunks = useRef([]); // Stores audio data chunks
+  const mediaRecorder = useRef(null); // MediaRecorder instance
+  const audioContext = useRef(null); // Audio context
+  const silenceTimeout = useRef(null); // Timeout for silence detection
 
+  // Effect hook to start or stop recording based on isRecording state
   useEffect(() => {
     if (isRecording) {
       startRecording();
@@ -30,6 +39,9 @@ const AudioRecorder = () => {
     };
   }, [isRecording]);
 
+  /**
+   * Starts audio recording.
+   */
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -60,7 +72,7 @@ const AudioRecorder = () => {
           if (silenceTimeout.current) {
             clearTimeout(silenceTimeout.current);
           }
-          silenceTimeout.current = setTimeout(() => setIsRecording(false), 5000);
+          silenceTimeout.current = setTimeout(() => setIsRecording(false), silenceDuration);
         } else {
           if (silenceTimeout.current) {
             clearTimeout(silenceTimeout.current);
@@ -78,12 +90,19 @@ const AudioRecorder = () => {
     }
   };
 
+  /**
+   * Stops audio recording.
+   */
   const stopRecording = () => {
     if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
       mediaRecorder.current.stop();
     }
   };
 
+  /**
+   * Processes the recorded audio by sending it to OpenAI's Whisper API for transcription.
+   * @param {Blob} audioBlob - The recorded audio blob.
+   */
   const processAudio = async (audioBlob) => {
     const file = new File([audioBlob], 'output.wav', { type: 'audio/wav' });
     const formData = new FormData();
@@ -127,6 +146,10 @@ const AudioRecorder = () => {
     }
   };
 
+  /**
+   * Plays the audio response using OpenAI's Text-to-Speech API.
+   * @param {string} text - The text to convert to speech.
+   */
   const playAudio = async (text) => {
     const url = "https://api.openai.com/v1/audio/speech";
     const headers = {
@@ -175,6 +198,14 @@ const AudioRecorder = () => {
           {isRecording ? 'Stop Recording' : 'Start Recording'}
         </button>
         <p>{isRecording ? 'Recording... Speak now!' : 'Press the button to start recording'}</p>
+        <label>
+          Silence Duration (ms):
+          <input
+            type="number"
+            value={silenceDuration}
+            onChange={(e) => setSilenceDuration(Number(e.target.value))}
+          />
+        </label>
         <ChatHistory chatHistory={chatHistory} />
       </header>
     </div>
