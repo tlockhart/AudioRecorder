@@ -1,0 +1,15 @@
+<svg width="260" height="260" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_f_61_39533)">
+<rect x="30" y="30" width="200" height="200" rx="100" fill="#D698BC"/>
+</g>
+<rect x="53" y="53" width="154" height="154" rx="77" fill="#FAFAFA"/>
+<path d="M122 121H138V129C138 133.418 134.418 137 130 137C125.582 137 122 133.418 122 129V121Z" fill="#722362" stroke="#722351" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M144 131V105C144 97.268 137.732 91 130 91C122.268 91 116 97.268 116 105V131C116 138.732 122.268 145 130 145C137.732 145 144 138.732 144 131ZM130 86C119.507 86 111 94.5066 111 105V131C111 141.493 119.507 150 130 150C140.493 150 149 141.493 149 131V105C149 94.5066 140.493 86 130 86ZM103 125.5C104.381 125.5 105.5 126.619 105.5 128V131C105.5 144.531 116.469 155.5 130 155.5C143.531 155.5 154.5 144.531 154.5 131V128C154.5 126.619 155.619 125.5 157 125.5C158.381 125.5 159.5 126.619 159.5 128V131C159.5 146.28 147.883 158.846 133 160.349V171.5H143C144.381 171.5 145.5 172.619 145.5 174C145.5 175.381 144.381 176.5 143 176.5H130.5H118C116.619 176.5 115.5 175.381 115.5 174C115.5 172.619 116.619 171.5 118 171.5H128V160.433C112.64 159.405 100.5 146.62 100.5 131V128C100.5 126.619 101.619 125.5 103 125.5Z" fill="#722362"/>
+<defs>
+<filter id="filter0_f_61_39533" x="22" y="22" width="216" height="216" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="4" result="effect1_foregroundBlur_61_39533"/>
+</filter>
+</defs>
+</svg>
