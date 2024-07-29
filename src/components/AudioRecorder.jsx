@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import OpenAI from 'openai';
-import ChatHistory from './ChatHistory';
-import '../App.css';
+import React, { useState, useEffect, useRef } from "react";
+import OpenAI from "openai";
+import ChatHistoryAudio from "./ChatHistoryAudio";
+import ChatHistoryText from "./ChatHistoryText";
+// import '../App.css';
 
 const secretKey = process.env.REACT_APP_OPEN_AI_API_KEY;
 const openai = new OpenAI({
@@ -11,7 +12,7 @@ const openai = new OpenAI({
 
 /**
  * AudioRecorder component.
- * 
+ *
  * This component handles audio recording, transcription using OpenAI Whisper,
  * and conversation handling with OpenAI GPT-4. It also displays the chat history
  * in a separate component.
@@ -20,6 +21,7 @@ const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false); // Recording state
   const [chatHistory, setChatHistory] = useState([]); // Chat history
   const [silenceDuration, setSilenceDuration] = useState(5000); // Silence duration in milliseconds
+  const [isTextMode, setIsTextMode] = useState(true); // Toggle state for chat mode
   const audioChunks = useRef([]); // Stores audio data chunks
   const mediaRecorder = useRef(null); // MediaRecorder instance
   const audioContext = useRef(null); // Audio context
@@ -33,11 +35,15 @@ const AudioRecorder = () => {
       stopRecording();
     }
     return () => {
-      if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
+      if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
         mediaRecorder.current.stop();
       }
     };
   }, [isRecording]);
+
+  // useEffect(()=>{
+
+  // }, [isTextMode]);
 
   /**
    * Starts audio recording.
@@ -45,7 +51,8 @@ const AudioRecorder = () => {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
+      audioContext.current = new (window.AudioContext ||
+        window.webkitAudioContext)();
       mediaRecorder.current = new MediaRecorder(stream);
 
       mediaRecorder.current.ondataavailable = (event) => {
@@ -55,7 +62,7 @@ const AudioRecorder = () => {
       };
 
       mediaRecorder.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+        const audioBlob = new Blob(audioChunks.current, { type: "audio/wav" });
         audioChunks.current = [];
         processAudio(audioBlob);
       };
@@ -67,12 +74,15 @@ const AudioRecorder = () => {
       const dataArray = new Uint8Array(analyser.fftSize);
       const checkSilence = () => {
         analyser.getByteTimeDomainData(dataArray);
-        const isSilent = dataArray.every(value => value === 128);
+        const isSilent = dataArray.every((value) => value === 128);
         if (isSilent) {
           if (silenceTimeout.current) {
             clearTimeout(silenceTimeout.current);
           }
-          silenceTimeout.current = setTimeout(() => setIsRecording(false), silenceDuration);
+          silenceTimeout.current = setTimeout(
+            () => setIsRecording(false),
+            silenceDuration
+          );
         } else {
           if (silenceTimeout.current) {
             clearTimeout(silenceTimeout.current);
@@ -86,7 +96,7 @@ const AudioRecorder = () => {
 
       mediaRecorder.current.start();
     } catch (error) {
-      console.error('Error accessing microphone:', error);
+      console.error("Error accessing microphone:", error);
     }
   };
 
@@ -94,7 +104,7 @@ const AudioRecorder = () => {
    * Stops audio recording.
    */
   const stopRecording = () => {
-    if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
+    if (mediaRecorder.current && mediaRecorder.current.state !== "inactive") {
       mediaRecorder.current.stop();
     }
   };
@@ -104,20 +114,23 @@ const AudioRecorder = () => {
    * @param {Blob} audioBlob - The recorded audio blob.
    */
   const processAudio = async (audioBlob) => {
-    const file = new File([audioBlob], 'output.wav', { type: 'audio/wav' });
+    const file = new File([audioBlob], "output.wav", { type: "audio/wav" });
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('model', 'whisper-1');
-    formData.append('response_format', 'text');
+    formData.append("file", file);
+    formData.append("model", "whisper-1");
+    formData.append("response_format", "text");
 
     try {
-      const transcriptionResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${secretKey}`,
-        },
-        body: formData,
-      });
+      const transcriptionResponse = await fetch(
+        "https://api.openai.com/v1/audio/transcriptions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${secretKey}`,
+          },
+          body: formData,
+        }
+      );
 
       const transcribedText = await transcriptionResponse.text();
       console.log(`>> You said: ${transcribedText}`);
@@ -125,26 +138,65 @@ const AudioRecorder = () => {
 
       const messages = [
         {
-          role: 'system',
-          content: 'You are a helpful assistant providing concise responses in at most two sentences.',
+          role: "system",
+          content:
+            "You are a helpful assistant providing concise responses in at most two sentences.",
         },
         ...chatHistory,
-        { role: 'user', content: transcribedText },
+        { role: "user", content: transcribedText },
       ];
 
       const chatResponse = await openai.chat.completions.create({
         messages: messages,
-        model: 'gpt-4',
+        model: "gpt-4",
       });
 
       const chatResponseText = chatResponse.choices[0].message.content;
-      setChatHistory([...chatHistory, { role: 'user', content: transcribedText }, { role: 'assistant', content: chatResponseText }]);
+      setChatHistory([
+        ...chatHistory,
+        { role: "user", content: transcribedText },
+        { role: "assistant", content: chatResponseText },
+      ]);
       console.log(`>> Assistant said: ${chatResponseText}`);
       await playAudio(chatResponseText);
     } catch (error) {
-      console.error('Error during transcription or chat:', error);
+      console.error("Error during transcription or chat:", error);
     }
   };
+
+    /**
+   * Processes the text input by sending it to OpenAI's GPT-4 API for a response.
+   * @param {string} userInput - The text input from the user.
+   */
+    const processText = async (userInput) => {
+      try {
+        console.log(`>> You typed: ${userInput}`);
+        const messages = [
+          {
+            role: 'system',
+            content: 'You are a helpful assistant providing concise responses in at most two sentences.',
+          },
+          ...chatHistory,
+          { role: 'user', content: userInput },
+        ];
+  
+        const chatResponse = await openai.chat.completions.create({
+          messages: messages,
+          model: 'gpt-4',
+        });
+  
+        const chatResponseText = chatResponse.choices[0].message.content;
+        setChatHistory([
+          ...chatHistory,
+          { role: 'user', content: userInput },
+          { role: 'assistant', content: chatResponseText },
+        ]);
+        console.log(`>> Assistant typed: ${chatResponseText}`);
+        // await playAudio(chatResponseText);
+      } catch (error) {
+        console.error('Error during chat:', error);
+      }
+    };
 
   /**
    * Plays the audio response using OpenAI's Text-to-Speech API.
@@ -165,9 +217,9 @@ const AudioRecorder = () => {
 
     try {
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...headers,
         },
         body: JSON.stringify(data),
@@ -178,7 +230,8 @@ const AudioRecorder = () => {
       }
 
       const arrayBuffer = await response.arrayBuffer();
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
       const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
       const source = audioContext.createBufferSource();
@@ -186,8 +239,14 @@ const AudioRecorder = () => {
       source.connect(audioContext.destination);
       source.start(0);
     } catch (error) {
-      console.error('Error in playAudio:', error);
+      console.error("Error in playAudio:", error);
     }
+  };
+
+  const handleSendMessage = (message) => {
+      console.log("Message:", message);
+      processText(message)
+      // setIsRecording(!isRecording);
   };
 
   return (
@@ -195,9 +254,13 @@ const AudioRecorder = () => {
       <header className="App-header">
         <h1>AI-Powered Voice Chat</h1>
         <button onClick={() => setIsRecording(!isRecording)}>
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
+          {isRecording ? "Stop Recording" : "Start Recording"}
         </button>
-        <p>{isRecording ? 'Recording... Speak now!' : 'Press the button to start recording'}</p>
+        <p>
+          {isRecording
+            ? "Recording... Speak now!"
+            : "Press the button to start recording"}
+        </p>
         <label>
           Silence Duration (ms):
           <input
@@ -206,7 +269,17 @@ const AudioRecorder = () => {
             onChange={(e) => setSilenceDuration(Number(e.target.value))}
           />
         </label>
-        <ChatHistory chatHistory={chatHistory} />
+        <button onClick={() => setIsTextMode(!isTextMode)}>
+          {isTextMode ? "Switch to Audio Mode" : "Switch to Text Mode"}
+        </button>
+        {isTextMode ? (
+          <ChatHistoryText
+            sendMessage={handleSendMessage}
+            chatHistory={chatHistory}
+          />
+        ) : (
+          <ChatHistoryAudio chatHistory={chatHistory} />
+        )}
       </header>
     </div>
   );

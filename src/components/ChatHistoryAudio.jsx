@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
 /**
- * ChatHistory component
+ * ChatHistoryAudio component
  * @param {Array} chatHistory - Array of chat messages
  */
-const ChatHistory = ({ chatHistory }) => {
+const ChatHistoryAudio = ({ chatHistory }) => {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -25,4 +25,4 @@ const ChatHistory = ({ chatHistory }) => {
   );
 };
 
-export default ChatHistory;
+export default ChatHistoryAudio;
