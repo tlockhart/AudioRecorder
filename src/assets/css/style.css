@@ -1,0 +1,235 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+p {
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: "Open Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  src: local("Open Sans"), url(../fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  src: local("Inter"), url(../fonts/InterVariable.ttf) format("truetype");
+}
+* {
+  font-family: "Open Sans", Helvetica, sans-serif;
+  box-sizing: border-box;
+  color: #486284;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.primary {
+  padding: 12px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50px;
+  border: 1px solid #486284;
+  background: #486284;
+  color: #FFF;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+.primary:hover {
+  color: rgba(37, 37, 37, 0.9);
+  background-color: rgba(217, 217, 217, 0.3);
+}
+.primary:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #3c8DE4;
+  color: rgba(37, 37, 37, 0.9);
+  background-color: rgba(217, 217, 217, 0.3);
+}
+
+.secondary {
+  padding: 12px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50px;
+  border: 1px solid var(--Neutral-10, #486284);
+  background: transparent;
+  color: var(--Neutral-10, #486284);
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+.secondary:hover {
+  color: rgba(37, 37, 37, 0.9);
+  background-color: rgba(217, 217, 217, 0.3);
+}
+.secondary:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #3c8DE4;
+  color: rgba(37, 37, 37, 0.9);
+  background-color: rgba(217, 217, 217, 0.3);
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--Light-B, #CED7E4);
+  height: 36px;
+  padding: 10px;
+}
+.tag button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.tag span {
+  color: var(--Dark-B, #486284);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.5px;
+}
+
+.modal {
+  border-radius: 8px;
+  background: #EFF2F6;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  padding: 28px;
+}
+.modal .close-modal {
+  background: transparent;
+  border: none;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+
+/******************************************/
+.chat-history {
+  outline: 1px solid yellow;
+  max-height: 300px;
+  /* Adjust based on your requirement */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+.chat-history .chat-message {
+  display: flex;
+  justify-content: flex-start;
+  margin: 10px 0;
+}
+.chat-history .chat-message .chat-bubble {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #e0e0e0;
+  position: relative;
+}
+.chat-history .chat-message .chat-bubble strong {
+  display: block;
+  margin-bottom: 5px;
+}
+.chat-history .chat-message.user {
+  justify-content: flex-end;
+}
+.chat-history .chat-message.user .chat-bubble {
+  background-color: #0084ff;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+.chat-history .chat-message .assistant .chat-bubble {
+  background-color: #e5e5ea;
+  color: black;
+  border-bottom-left-radius: 0;
+}
