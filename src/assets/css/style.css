@@ -194,15 +194,17 @@ code {
 
 /******************************************/
 .chat-history {
-  max-height: 300px;
-  overflow-y: auto;
+  overflow-y: hidden;
   border: 1px solid #ccc;
   padding: 10px;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 24px;
+  padding-right: 24px;
   margin: 10px 0;
   background-color: #f9f9f9;
   border-radius: 10px;
+  overflow-y: none;
+  width: 512px;
+  height: 382px;
 }
 .chat-history .chat-message {
   display: flex;
@@ -211,6 +213,7 @@ code {
   position: relative;
 }
 .chat-history .chat-message.user {
+  display: flex;
   justify-content: flex-end;
 }
 .chat-history .chat-message.user .chat-bubble {
@@ -221,7 +224,7 @@ code {
   border-bottom-right-radius: 0;
   /* Changed from right to left */
   position: relative;
-  max-width: 100%;
+  margin-right: 20px;
 }
 .chat-history .chat-message.user .chat-bubble::before {
   content: "";
@@ -239,12 +242,18 @@ code {
   clip-path: polygon(0 100%, 0 100%, 100% 100%, 100% 0);
   border-bottom-right-radius: 0.8vh;
 }
+.chat-history .chat-message.assistant {
+  display: flex;
+  justify-content: flex-start;
+}
 .chat-history .chat-message.assistant .chat-bubble {
+  display: flex;
   background-color: #eff7ff;
   color: #2B6BBE;
   border-color: #2B6BBE;
   border-bottom-left-radius: 0;
   position: relative;
+  margin-left: 20px;
 }
 .chat-history .chat-message.assistant .chat-bubble .chat-bubble::before {
   content: "";
@@ -279,8 +288,9 @@ code {
   border-bottom-right-radius: 0.8vh;
 }
 .chat-history .chat-bubble {
-  max-width: 60%;
-  padding: 10px;
+  width: 85%;
+  text-align: left;
+  padding: 16.5px 22px 16px 22px;
   border-radius: 10px;
   border: 2px solid #000;
   /* Default border color, will be overridden by specific styles */
