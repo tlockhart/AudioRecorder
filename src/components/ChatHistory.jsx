@@ -16,7 +16,6 @@ const ChatHistory = ({ chatHistory }) => {
       {chatHistory.map((message, index) => (
         <div key={index} className={`chat-message ${message.role}`}>
           <div className="chat-bubble">
-            <strong>{message.role === 'user' ? 'You: ' : 'Assistant: '}</strong>
             {message.content}
           </div>
         </div>
