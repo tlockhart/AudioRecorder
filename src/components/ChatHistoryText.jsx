@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 /**
  * ChatHistoryText component
  * @param {Array} chatHistory - Array of chat messages
- * @param {Function} onSendMessage - Function to handle sending a new message
+ * @param {Function} sendMessage - Function to handle sending a new message
  */
 const ChatHistoryText = ({ chatHistory, sendMessage }) => {
   const chatEndRef = useRef(null);
@@ -15,13 +15,12 @@ const ChatHistoryText = ({ chatHistory, sendMessage }) => {
 
   const handleSendMessage = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    console.log("EVENT:", e)
-    if (message.trim()) {
-      sendMessage(message);
-      setMessage('');
+      e.preventDefault();
+      if (message.trim()) {
+        sendMessage(message);
+        setMessage('');
+      }
     }
-}
   };
 
   return (
@@ -35,17 +34,16 @@ const ChatHistoryText = ({ chatHistory, sendMessage }) => {
           </div>
         ))}
         <div ref={chatEndRef} />
-        <form className="chat-input" onSubmit={handleSendMessage}>
+         
+      </div>
+      <form className="chat-input" onSubmit={handleSendMessage}>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
           onKeyDown={handleSendMessage}
         />
-        {/* <button type="submit">Send</button> */}
       </form>
-      </div>
-      
     </div>
   );
 };
