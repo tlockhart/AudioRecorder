@@ -24,7 +24,7 @@ const ChatHistoryText = ({ chatHistory, sendMessage }) => {
   };
 
   return (
-    <div className="chat-container">
+    <div className="chat-container-text">
       <div className="chat-history">
         {chatHistory.map((msg, index) => (
           <div key={index} className={`chat-message ${msg.role}`}>
@@ -40,7 +40,7 @@ const ChatHistoryText = ({ chatHistory, sendMessage }) => {
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
+          placeholder="Type your message, then press Enter"
           onKeyDown={handleSendMessage}
         />
       </form>

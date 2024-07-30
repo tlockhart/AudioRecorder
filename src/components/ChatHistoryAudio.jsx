@@ -12,7 +12,7 @@ const ChatHistoryAudio = ({ chatHistory }) => {
   }, [chatHistory]);
 
   return (
-    <div className="chat-history">
+    <div className="chat-history-audio">
       {chatHistory.map((message, index) => (
         <div key={index} className={`chat-message ${message.role}`}>
           <div className="chat-bubble">
